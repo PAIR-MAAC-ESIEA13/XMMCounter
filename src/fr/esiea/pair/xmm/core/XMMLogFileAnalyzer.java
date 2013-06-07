@@ -11,66 +11,64 @@ import java.util.Map;
 public class XMMLogFileAnalyzer {
 
 	public XMMLogFileAnalyzer() {
-		
+
 	}
-	
+
 	private static RegisterCounter getCounter(Map<String, RegisterCounter> counters, String register) {
-		
+
 		RegisterCounter counter = counters.get(register);
-		
+
 		if(counter == null) {
 			counter = new RegisterCounter(register);
 			counters.put(register, counter);
 		}
-		
+
 		return counter;
 	}
-	
+
 	public Collection<RegisterCounter> analyzeRegisters(String logFileName) throws IOException {
-		
+
 		XMMLogFileReader logReader = new XMMLogFileReader(logFileName);
-		
+
 		XMMLogLine newLine = null;
-		
+
 		Map<String, RegisterCounter> result = new HashMap<>();
-		
+
 		while((newLine = logReader.readLine()) != null) {
-			
-			//System.out.println("Analyzing line " + newLine);
-			
+
+			System.out.println("Analyzing line " + newLine);
+
 			XMMInstruction inst = newLine.getInstruction();
 			RegisterCounter counter = null;
-			
+
 			switch(newLine.getOperationType()) {
-			
-				case READ : 
-					
-					if(inst.isPointer(XMMInstruction.SOURCE_ARG)) //We ignore pointers.
-						break;
-					
+
+			case READ : 
+
+				if(inst.isRegister(XMMInstruction.SOURCE_ARG)) {
 					counter = getCounter(result, inst.getSource());
-					
+
 					counter.addRead();
-					
-					break;
-					
-				case WRITE:
-					
-					if(inst.isPointer(XMMInstruction.DESTINATION_ARG)) //We ignore pointers.
-						break;
-					
+				}
+
+				break;
+
+			case WRITE:
+
+				if(inst.isRegister(XMMInstruction.DESTINATION_ARG)) {
 					counter = getCounter(result, inst.getDestination());
-					
+
 					counter.addWrite();
-					
-					break;
-			
+				}
+
+				break;
+
 			}
-			
-			//System.out.println(counter);
+
+			System.out.println(counter);
 		}
-		
+
 		return result.values();
 	}
-	
+
 }

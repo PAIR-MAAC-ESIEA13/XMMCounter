@@ -5,7 +5,8 @@ import java.util.regex.Pattern;
 
 public class XMMInstruction {
 	
-	private static final Pattern argsRegex = Pattern.compile("(xmm((word ptr \\[e[ds]i(\\+0x[0-9A-F]{2})?\\])|([0-9])))");
+	//(xmm((word ptr \\[e[ds]i(\\+0x[0-9A-F]{2})?\\])|([0-9]))) //Old
+	private static final Pattern argsRegex = Pattern.compile("(xmm([0-9]))");
 	
 	public static final int SOURCE_ARG 	 = 1;
 	public static final int DESTINATION_ARG = 0;
@@ -33,12 +34,12 @@ public class XMMInstruction {
 		return this.arguments[DESTINATION_ARG];
 	}
 	
-	public boolean isPointer(int arg) {
+	public boolean isRegister(int arg) {
 		Matcher argMatcher = argsRegex.matcher(this.arguments[arg]);
 		
 		argMatcher.matches();
 		
-		return argMatcher.group(3) != null;
+		return argMatcher.matches();
 	}
 	
 	public String toString() {

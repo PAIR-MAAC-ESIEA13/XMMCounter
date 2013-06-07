@@ -9,7 +9,7 @@ public class XMMLogLine {
 		READ, WRITE
 	}
 	
-	private static final Pattern lineRegex = Pattern.compile("Instrumented (write|read)[ ]+on ins ([A-Z0-9]+) ([a-z]+) (.*)");
+	private static final Pattern lineRegex = Pattern.compile("Instrumented (write|read)[ ]+on ins ([A-Z0-9]+) ([a-z2]+) (.*)");
 	
 	private static final int OPERATION_TYPE = 1;
 	private static final int ADDRESS 		= 2;
